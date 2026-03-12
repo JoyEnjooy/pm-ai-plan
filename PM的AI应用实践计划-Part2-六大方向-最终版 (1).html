@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM的AI应用实践计划</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* 顶部导航 */
+        .header {
+            background: #8B0000;
+            color: #fff;
+            padding: 0 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 64px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-right: 48px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        .nav-tab.active {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            margin-top: 64px;
+            min-height: calc(100vh - 64px);
+        }
+        
+        .page {
+            display: none;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 封面页 */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 64px);
+            text-align: center;
+            background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
+        }
+        
+        .cover-title {
+            font-size: 56px;
+            font-weight: 700;
+            color: #8B0000;
+            margin-bottom: 20px;
+        }
+        
+        .cover-subtitle {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .cover-tag {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #fff;
+            border: 2px solid #8B0000;
+            border-radius: 30px;
+            font-size: 16px;
+            color: #8B0000;
+        }
+        
+        /* 六大模块页 */
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #8B0000;
+            margin-bottom: 32px;
+        }
+        
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .module-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        
+        .module-top {
+            padding: 20px;
+            background: #8B0000;
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .module-num {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .module-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .module-action {
+            font-size: 15px;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .module-bottom {
+            padding: 20px;
+            background: #fafafa;
+        }
+        
+        .module-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            color: #8B0000;
+            font-weight: 600;
+        }
+        
+        /* 案例页 */
+        .case-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .case-num {
+            width: 44px;
+            height: 44px;
+            background: #8B0000;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .case-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #8B0000;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .panel-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .right-panel {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            padding: 24px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .feature-card {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e8e8e8;
+        }
+        
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            background: #8B0000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+        }
+        
+        .feature-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .feature-list {
+            list-style: none;
+            font-size: 14px;
+            color: #555;
+            line-height: 2;
+        }
+        
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        
+        .feature-list li::before {
+            content: '•';
+            color: #8B0000;
+            font-weight: bold;
+        }
+        
+        .alert-box {
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        
+        .alert-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 8px;
+        }
+        
+        .alert-text {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 1200px) {
+            .module-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 0 20px;
+            }
+            .nav-tab {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="header-title">PM的AI应用实践计划</div>
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-page="overview">AI应用方向</button>
+            <button class="nav-tab" data-page="supervision-case">数据洞察与趋势分析</button>
+            <button class="nav-tab" data-page="schedule-case">智能排期与资源调度</button>
+            <button class="nav-tab" data-page="cost-case">成本风险监控</button>
+            <button class="nav-tab" data-page="bot-case">项目管理Bot</button>
+        </nav>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 六大模块页 -->
+        <section class="page active" id="overview">
+            <h2 class="page-title">AI应用方向</h2>
+            <div class="module-grid">
+                <div class="module-card" onclick="showPage('supervision')">
+                    <div class="module-top">
+                        <div class="module-header">
+                            <div class="module-num">01</div>
+                            <div class="module-name">数据洞察</div>
+                        </div>
+                        <div class="module-action">开发全流程数据洞察与趋势分析</div>
+                    </div>
+                    <div class="module-bottom">
+                        <div class="module-desc">建立覆盖项目全流程的数据洞察机制，自动汇聚多源数据，生成<span class="highlight">可视化分析报表与趋势预测</span>，辅助PM快速了解项目全貌并<span class="highlight">及时干预异常</span>。</div>
+                    </div>
+                </div>
+                
+                <div class="module-card" onclick="showPage('schedule-case')">
+                    <div class="module-top">
+                        <div class="module-header">
+                            <div class="module-num">02</div>
+                            <div class="module-name">资源管理</div>
+                        </div>
+                        <div class="module-action">智能排期与资源调度优化</div>
+                    </div>
+                    <div class="module-bottom">
+                        <div class="module-desc">建立AI驱动的智能排期系统，基于管线标效和历史数据自动优化资源配置，综合考虑任务依赖、人力负载、优先级等多维度因素，<span class="highlight">生成最优排期方案并动态调整</span>。</div>
+                    </div>
+                </div>
+                
+                <div class="module-card" onclick="showPage('cost-case')">
+                    <div class="module-top">
+                        <div class="module-header">
+                            <div class="module-num">03</div>
+                            <div class="module-name">成本管理</div>
+                        </div>
+                        <div class="module-action">智能成本风险监控系统</div>
+                    </div>
+                    <div class="module-bottom">
+                        <div class="module-desc">建立美术成本智能监控系统，支持年度预算配置、月度实际消耗录入、<span class="highlight">智能风险预测与可视化分析</span>，实现成本超支提前预警。</div>
+                    </div>
+                </div>
+                
+                <div class="module-card">
+                    <div class="module-top">
+                        <div class="module-header">
+                            <div class="module-num">04</div>
+                            <div class="module-name">生产提效</div>
+                        </div>
+                        <div class="module-action">管线优化与AI提效</div>
+                    </div>
+                    <div class="module-bottom">
+                        <div class="module-desc">推动项目生产流升级，盘点当前管线标效及AI应用现状，识别AI提效潜力，推进<span class="highlight">生产线重构</span>，实现<span class="highlight">降本增效</span>。</div>
+                    </div>
+                </div>
+                
+                <div class="module-card">
+                    <div class="module-top">
+                        <div class="module-header">
+                            <div class="module-num">05</div>
+                            <div class="module-name">信息协同</div>
+                        </div>
+                        <div class="module-action">精准信息分发与易协作智能化</div>
+                    </div>
+                    <div class="module-bottom">
+                        <div class="module-desc">优化信息流转效率，通过自然语言实现<span class="highlight">易协作智能开单</span>，基于角色和场景精准推送关键信息，<span class="highlight">消除信息差</span>并减少无效沟通成本。</div>
+                    </div>
+                </div>
+                
+                <div class="module-card" onclick="showPage('bot-case')">
+                    <div class="module-top">
+                        <div class="module-header">
+                            <div class="module-num">06</div>
+                            <div class="module-name">决策中枢</div>
+                        </div>
+                        <div class="module-action">项目管理智能Bot</div>
+                    </div>
+                    <div class="module-bottom">
+                        <div class="module-desc">打造项目管理智能Bot，作为统一入口整合六大能力，支持自然语言交互、流程问答、进度查询、风险预警等多场景，<span class="highlight">一句话完成复杂决策支持</span>。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据洞察案例 -->
+        <section class="page" id="supervision-case">
+            <div class="case-header">
+                <div class="case-num">01</div>
+                <h2 class="case-title">数据洞察——开发全流程数据洞察与趋势分析</h2>
+            </div>
+            
+            <!-- 方案部分 -->
+            <div class="feature-grid" style="margin-bottom:40px;">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">📡</div>
+                        <div class="feature-title">多源数据采集</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>自动对接易协作、SVN、Git等系统</li>
+                        <li>实时同步需求、任务、代码提交数据</li>
+                        <li>支持自定义数据源接入</li>
+                        <li>数据清洗与标准化处理</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card" style="background:linear-gradient(135deg,#fff5f5 0%,#fff 100%);border:1px solid #ffcdd2;">
+                    <div class="feature-header">
+                        <div class="feature-icon" style="background:#8B0000;">🎯</div>
+                        <div class="feature-title" style="color:#8B0000;">三维数据洞察</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li><strong style="color:#8B0000;">进度管理：</strong>里程碑跟踪、延期预警、关键路径监控</li>
+                        <li><strong style="color:#8B0000;">人员管理：</strong>工作量量化、产出效率、考勤合规</li>
+                        <li><strong style="color:#8B0000;">质量管理：</strong>验收通过率、回退率、Bug密度追踪</li>
+                        <li>AI智能评分，自动生成三维雷达图</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">🤖</div>
+                        <div class="feature-title">AI智能分析与预警</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>自动识别进度异常、延期风险并预警推送</li>
+                        <li>智能归因分析，定位问题根因</li>
+                        <li>趋势预测与风险提前感知</li>
+                        <li>多渠道推送（popo/邮件），支持升级机制</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">可视化数据看板</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>项目全景仪表盘，一屏掌握全局</li>
+                        <li>进度/人员/质量三维数据下钻分析</li>
+                        <li>自定义报表与数据导出</li>
+                        <li>移动端实时查看</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 示意图部分 -->
+            <div style="margin-top:48px;padding-top:32px;border-top:2px dashed #e8e8e8;">
+                <h3 style="font-size:20px;font-weight:600;color:#8B0000;margin-bottom:24px;">📊 数据看板示意图</h3>
+                
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <!-- 左侧：项目健康度仪表盘 -->
+                    <div class="panel-card">
+                        <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">项目健康度总览</div>
+                        <div style="display:flex;align-items:center;justify-content:center;padding:20px;">
+                            <svg width="240" height="200" viewBox="0 0 240 200">
+                                <!-- 半圆仪表盘背景 -->
+                                <path d="M 30 170 A 90 90 0 0 1 210 170" fill="none" stroke="#e8e8e8" stroke-width="20" stroke-linecap="round"/>
+                                
+                                <!-- 健康度进度 (85%) -->
+                                <path d="M 30 170 A 90 90 0 0 1 195 125" fill="none" stroke="#4caf50" stroke-width="20" stroke-linecap="round"/>
+                                
+                                <!-- 中心数据 -->
+                                <text x="120" y="150" text-anchor="middle" font-size="48" font-weight="bold" fill="#4caf50">85</text>
+                                <text x="120" y="175" text-anchor="middle" font-size="14" fill="#666">健康度评分</text>
+                                
+                                <!-- 刻度标签 -->
+                                <text x="35" y="185" font-size="10" fill="#999">0</text>
+                                <text x="120" y="55" font-size="10" fill="#999">100</text>
+                                <text x="205" y="185" font-size="10" fill="#999">0</text>
+                            </svg>
+                        </div>
+                        
+                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
+                            <div style="padding:12px;background:#e8f5e9;border-radius:8px;text-align:center;">
+                                <div style="font-size:24px;font-weight:bold;color:#4caf50;">12</div>
+                                <div style="font-size:12px;color:#666;">正常项目</div>
+                            </div>
+                            <div style="padding:12px;background:#fff5f5;border-radius:8px;text-align:center;">
+                                <div style="font-size:24px;font-weight:bold;color:#ff6b6b;">3</div>
+                                <div style="font-size:12px;color:#666;">风险项目</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧：风险预警列表 -->
+                    <div class="panel-card">
+                        <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">实时风险预警</div>
+                        <div style="display:flex;flex-direction:column;gap:12px;">
+                            <div style="padding:14px;background:#fff5f5;border-radius:8px;border-left:4px solid #ff6b6b;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                    <span style="font-size:14px;font-weight:600;color:#8B0000;">⚠️ 版本延期风险</span>
+                                    <span style="font-size:11px;color:#999;">2分钟前</span>
+                                </div>
+                                <div style="font-size:12px;color:#666;line-height:1.6;">
+                                    下周版本3个需求延期概率>70%，建议立即协调资源
+                                </div>
+                            </div>
+                            
+                            <div style="padding:14px;background:#fff9e6;border-radius:8px;border-left:4px solid #ffa726;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                    <span style="font-size:14px;font-weight:600;color:#ef6c00;">⚡ 人力过载预警</span>
+                                    <span style="font-size:11px;color:#999;">15分钟前</span>
+                                </div>
+                                <div style="font-size:12px;color:#666;line-height:1.6;">
+                                    UI组本周负载达115%，建议将P2需求延后
+                                </div>
+                            </div>
+                            
+                            <div style="padding:14px;background:#e8f5e9;border-radius:8px;border-left:4px solid #4caf50;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                    <span style="font-size:14px;font-weight:600;color:#2e7d32;">✓ 里程碑达成</span>
+                                    <span style="font-size:11px;color:#999;">1小时前</span>
+                                </div>
+                                <div style="font-size:12px;color:#666;line-height:1.6;">
+                                    Q1版本按时发布，所有P0需求完成
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 人员管理量化看板 -->
+                <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <div class="panel-card">
+                        <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">👤 人员管理量化看板</div>
+                        <div style="padding:16px;background:#f8f9fa;border-radius:8px;margin-bottom:12px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                    <div style="width:40px;height:40px;background:#8B0000;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;">张</div>
+                                    <div>
+                                        <div style="font-size:14px;font-weight:600;">张伟</div>
+                                        <div style="font-size:11px;color:#666;">玩法组 | P4</div>
+                                    </div>
+                                </div>
+                                <div style="padding:4px 10px;background:#e8f5e9;border-radius:12px;font-size:11px;color:#2e7d32;">状态正常</div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                                <div style="text-align:center;padding:10px;background:#fff;border-radius:6px;">
+                                    <div style="font-size:18px;font-weight:bold;color:#667eea;">35</div>
+                                    <div style="font-size:10px;color:#666;">开发任务</div>
+                                </div>
+                                <div style="text-align:center;padding:10px;background:#fff;border-radius:6px;">
+                                    <div style="font-size:18px;font-weight:bold;color:#764ba2;">12</div>
+                                    <div style="font-size:10px;color:#666;">跟进任务</div>
+                                </div>
+                                <div style="text-align:center;padding:10px;background:#fff;border-radius:6px;">
+                                    <div style="font-size:18px;font-weight:bold;color:#22c55e;">94%</div>
+                                    <div style="font-size:10px;color:#666;">按时验收</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:#666;">
+                            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;">
+                                <span>回退次数</span>
+                                <span style="color:#22c55e;font-weight:600;">1次</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;">
+                                <span>出勤天数</span>
+                                <span style="font-weight:600;">22天</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;">
+                                <span>平均在岗</span>
+                                <span style="font-weight:600;">9.8小时</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:8px 0;">
+                                <span>考勤记录</span>
+                                <span style="font-size:11px;">09:15 - 20:30</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-card">
+                        <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">📊 团队TOP5排名</div>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:linear-gradient(90deg,#fff9e6,#fff);border-radius:8px;border-left:3px solid #ffa726;">
+                                <div style="font-size:16px;font-weight:bold;color:#ffa726;width:24px;">1</div>
+                                <div style="flex:1;">
+                                    <div style="font-size:13px;font-weight:600;">陈静</div>
+                                    <div style="font-size:11px;color:#666;">系统组 P5</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:14px;font-weight:bold;">55</div>
+                                    <div style="font-size:10px;color:#666;">总工作量</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:16px;font-weight:bold;color:#9ca3af;width:24px;">2</div>
+                                <div style="flex:1;">
+                                    <div style="font-size:13px;font-weight:600;">林雪</div>
+                                    <div style="font-size:11px;color:#666;">系统组 P5</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:14px;font-weight:bold;">51</div>
+                                    <div style="font-size:10px;color:#666;">总工作量</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:16px;font-weight:bold;color:#b45309;width:24px;">3</div>
+                                <div style="flex:1;">
+                                    <div style="font-size:13px;font-weight:600;">李娜</div>
+                                    <div style="font-size:11px;color:#666;">系统组 P5</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:14px;font-weight:bold;">50</div>
+                                    <div style="font-size:10px;color:#666;">总工作量</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:16px;font-weight:bold;color:#666;width:24px;">4</div>
+                                <div style="flex:1;">
+                                    <div style="font-size:13px;font-weight:600;">吴敏</div>
+                                    <div style="font-size:11px;color:#666;">系统组 P5</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:14px;font-weight:bold;">49</div>
+                                    <div style="font-size:10px;color:#666;">总工作量</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:16px;font-weight:bold;color:#666;width:24px;">5</div>
+                                <div style="flex:1;">
+                                    <div style="font-size:13px;font-weight:600;">王强</div>
+                                    <div style="font-size:11px;color:#666;">玩法组 P4</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:14px;font-weight:bold;">53</div>
+                                    <div style="font-size:10px;color:#666;">总工作量</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:12px;padding:10px;background:#fff5f5;border-radius:6px;font-size:11px;color:#8B0000;text-align:center;">
+                            ⚠️ 郑辉连续2周工作量低于均值30%，建议关注
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部：数据流转示意 -->
+                <div style="margin-top:24px;padding:20px;background:#fafafa;border-radius:12px;">
+                    <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:16px;text-align:center;">数据流转与智能分析流程</div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+                        <div style="text-align:center;padding:14px 16px;background:#fff;border-radius:10px;border:1px solid #e8e8e8;">
+                            <div style="font-size:22px;margin-bottom:4px;">📋</div>
+                            <div style="font-size:11px;color:#666;">易协作</div>
+                        </div>
+                        <div style="font-size:18px;color:#ccc;">→</div>
+                        <div style="text-align:center;padding:14px 16px;background:#fff;border-radius:10px;border:1px solid #e8e8e8;">
+                            <div style="font-size:22px;margin-bottom:4px;">📁</div>
+                            <div style="font-size:11px;color:#666;">SVN</div>
+                        </div>
+                        <div style="font-size:18px;color:#ccc;">→</div>
+                        <div style="text-align:center;padding:14px 16px;background:#fff;border-radius:10px;border:1px solid #e8e8e8;">
+                            <div style="font-size:22px;margin-bottom:4px;">🌐</div>
+                            <div style="font-size:11px;color:#666;">Git</div>
+                        </div>
+                        <div style="font-size:18px;color:#ccc;">→</div>
+                        <div style="text-align:center;padding:18px 20px;background:#8B0000;border-radius:10px;color:#fff;">
+                            <div style="font-size:22px;margin-bottom:4px;">🤖</div>
+                            <div style="font-size:11px;">AI分析引擎</div>
+                        </div>
+                        <div style="font-size:18px;color:#ccc;">→</div>
+                        <div style="text-align:center;padding:14px 16px;background:#fff;border-radius:10px;border:1px solid #e8e8e8;">
+                            <div style="font-size:22px;margin-bottom:4px;">📊</div>
+                            <div style="font-size:11px;color:#666;">项目看板</div>
+                        </div>
+                        <div style="font-size:18px;color:#ccc;">→</div>
+                        <div style="text-align:center;padding:14px 16px;background:#fff;border-radius:10px;border:1px solid #e8e8e8;">
+                            <div style="font-size:22px;margin-bottom:4px;">👤</div>
+                            <div style="font-size:11px;color:#666;">人员管理</div>
+                        </div>
+                        <div style="font-size:18px;color:#ccc;">→</div>
+                        <div style="text-align:center;padding:14px 16px;background:#fff;border-radius:10px;border:1px solid #e8e8e8;">
+                            <div style="font-size:22px;margin-bottom:4px;">🔔</div>
+                            <div style="font-size:11px;color:#666;">预警推送</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 成本管理案例 -->
+        <section class="page" id="cost-case">
+            <div class="case-header">
+                <div class="case-num">03</div>
+                <h2 class="case-title">成本管理——智能成本风险监控系统</h2>
+            </div>
+            
+            <!-- 方案部分 -->
+            <div class="feature-grid" style="margin-bottom:40px;">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">🤖</div>
+                        <div class="feature-title">AI智能预算配置</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>AI辅助年度预算制定，基于历史数据推荐合理区间</li>
+                        <li>智能季度占比分配，自动适配业务节奏</li>
+                        <li>What-if场景模拟，预测不同预算方案的影响</li>
+                        <li>多维度预算拆解（业务分组、环节类型）</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">📝</div>
+                        <div class="feature-title">智能数据录入</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>AI自动解析CSV/Excel，智能匹配字段</li>
+                        <li>异常数据自动识别并提醒</li>
+                        <li>支持自然语言录入，"3月美术外包50万"</li>
+                        <li>历史数据智能归档与趋势分析</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">⚠️</div>
+                        <div class="feature-title">AI风险预测引擎</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>机器学习预测模型，提前识别超支风险</li>
+                        <li>多维度智能预警：月度、季度、年度</li>
+                        <li>自动分析偏差原因，生成诊断报告</li>
+                        <li>智能建议优化方案，辅助PM决策</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-title">AI可视化洞察</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>AI自动生成图表，无需手动配置</li>
+                        <li>智能标注关键节点与异常点</li>
+                        <li>自然语言解读数据，"Q1表现优于预期10%"</li>
+                        <li>智能对比分析，自动生成环比/同比报告</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 示意图部分 -->
+            <div style="margin-top:48px;padding-top:32px;border-top:2px dashed #e8e8e8;">
+                <h3 style="font-size:20px;font-weight:600;color:#8B0000;margin-bottom:24px;">📊 系统示意图</h3>
+                
+                <div style="display:grid;grid-template-columns:320px 1fr;gap:24px;">
+                    <!-- 左侧：环形图 -->
+                    <div class="panel-card">
+                        <div class="panel-title" style="font-size:15px;font-weight:600;color:#333;">年度预算消耗（当前Q1）</div>
+                        <div style="text-align:center;padding:20px;">
+                            <svg width="260" height="260" viewBox="0 0 260 260">
+                                <!-- 渐变定义 -->
+                                <defs>
+                                    <linearGradient id="gradQ1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#8B0000"/>
+                                        <stop offset="100%" style="stop-color:#b71c1c"/>
+                                    </linearGradient>
+                                    <linearGradient id="gradProgress" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#4caf50"/>
+                                        <stop offset="100%" style="stop-color:#66bb6a"/>
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- 外圈背景 -->
+                                <circle cx="130" cy="130" r="90" fill="none" stroke="#f5f5f5" stroke-width="18"/>
+                                
+                                <!-- Q1-Q4 分区底色 -->
+                                <!-- Q1: 0-90度 (右上) -->
+                                <path d="M 130 40 A 90 90 0 0 1 220 130" fill="none" stroke="#ffebee" stroke-width="18" stroke-linecap="butt"/>
+                                <!-- Q2: 90-180度 (右下) -->
+                                <path d="M 220 130 A 90 90 0 0 1 130 220" fill="none" stroke="#f5f5f5" stroke-width="18" stroke-linecap="butt"/>
+                                <!-- Q3: 180-270度 (左下) -->
+                                <path d="M 130 220 A 90 90 0 0 1 40 130" fill="none" stroke="#f5f5f5" stroke-width="18" stroke-linecap="butt"/>
+                                <!-- Q4: 270-360度 (左上) -->
+                                <path d="M 40 130 A 90 90 0 0 1 130 40" fill="none" stroke="#fafafa" stroke-width="18" stroke-linecap="butt"/>
+                                
+                                <!-- 实际消耗进度 (27%) - 绿色表示正常 -->
+                                <path d="M 130 40 A 90 90 0 0 1 176.6 64.5" fill="none" stroke="url(#gradProgress)" stroke-width="18" stroke-linecap="round"/>
+                                
+                                <!-- Q1结束标记 (30%位置) -->
+                                <circle cx="181.3" cy="72.5" r="4" fill="#8B0000"/>
+                                
+                                <!-- 内圈装饰 -->
+                                <circle cx="130" cy="130" r="65" fill="#fff"/>
+                                <circle cx="130" cy="130" r="63" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+                                
+                                <!-- 中心数据 -->
+                                <text x="130" y="120" text-anchor="middle" font-size="42" font-weight="bold" fill="#2e7d32">27%</text>
+                                <text x="130" y="148" text-anchor="middle" font-size="13" fill="#666">年度预算</text>
+                                <text x="130" y="165" text-anchor="middle" font-size="12" fill="#999">Q1进行中</text>
+                                
+                                <!-- 图例 -->
+                                <rect x="65" y="195" width="130" height="50" rx="8" fill="#f8f8f8"/>
+                                <circle cx="85" cy="210" r="5" fill="#4caf50"/>
+                                <text x="95" y="214" font-size="11" fill="#333">已消耗 27%</text>
+                                <circle cx="85" cy="230" r="5" fill="#ffebee" stroke="#8B0000" stroke-width="1.5"/>
+                                <text x="95" y="234" font-size="11" fill="#333">Q1预算 30%</text>
+                            </svg>
+                        </div>
+                        
+                        <div style="margin-top:8px;padding:14px;background:#e8f5e9;border-radius:10px;border:1px solid #c8e6c9;">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                                <span style="font-size:16px;">✓</span>
+                                <span style="font-size:14px;font-weight:600;color:#2e7d32;">Q1进度正常</span>
+                            </div>
+                            <div style="font-size:12px;color:#555;line-height:1.6;">
+                                当前消耗 <strong>27%</strong>，距Q1基线 <strong>30%</strong> 还有 <strong>3%</strong> 缓冲空间
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧：月度成本对比图 -->
+                    <div class="panel-card">
+                        <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">月度成本对比 — 柱状图+滚动基线</div>
+                        <svg width="100%" height="300" viewBox="0 0 680 300" style="background:#fafafa;border-radius:8px;">
+                            <!-- 网格线 -->
+                            <line x1="60" y1="30" x2="60" y2="240" stroke="#e8e8e8" stroke-width="1"/>
+                            <line x1="60" y1="240" x2="640" y2="240" stroke="#e8e8e8" stroke-width="1"/>
+                            
+                            <!-- Y轴标签 -->
+                            <text x="50" y="35" text-anchor="end" font-size="10" fill="#999">300万</text>
+                            <text x="50" y="85" text-anchor="end" font-size="10" fill="#999">225万</text>
+                            <text x="50" y="135" text-anchor="end" font-size="10" fill="#999">150万</text>
+                            <text x="50" y="185" text-anchor="end" font-size="10" fill="#999">75万</text>
+                            <text x="50" y="248" text-anchor="end" font-size="10" fill="#999">0</text>
+                            
+                            <!-- 月度基线柱状图 (灰色) -->
+                            <rect x="85" y="165" width="28" height="75" fill="#e0e0e0" rx="3"/>
+                            <rect x="165" y="155" width="28" height="85" fill="#e0e0e0" rx="3"/>
+                            <rect x="245" y="145" width="28" height="95" fill="#e0e0e0" rx="3"/>
+                            <rect x="325" y="135" width="28" height="105" fill="#e0e0e0" rx="3" opacity="0.5"/>
+                            <rect x="405" y="125" width="28" height="115" fill="#e0e0e0" rx="3" opacity="0.5"/>
+                            <rect x="485" y="115" width="28" height="125" fill="#e0e0e0" rx="3" opacity="0.5"/>
+                            <rect x="565" y="105" width="28" height="135" fill="#e0e0e0" rx="3" opacity="0.5"/>
+                            
+                            <!-- 实际消耗柱状图 (绿色，仅Q1) -->
+                            <rect x="118" y="175" width="28" height="65" fill="#4caf50" rx="3"/>
+                            <rect x="198" y="165" width="28" height="75" fill="#4caf50" rx="3"/>
+                            <rect x="278" y="155" width="28" height="85" fill="#4caf50" rx="3"/>
+                            
+                            <!-- 柱状图数值标签 -->
+                            <text x="99" y="158" text-anchor="middle" font-size="9" fill="#999">135</text>
+                            <text x="132" y="168" text-anchor="middle" font-size="9" fill="#4caf50" font-weight="600">120</text>
+                            
+                            <text x="179" y="148" text-anchor="middle" font-size="9" fill="#999">150</text>
+                            <text x="212" y="158" text-anchor="middle" font-size="9" fill="#4caf50" font-weight="600">135</text>
+                            
+                            <text x="259" y="138" text-anchor="middle" font-size="9" fill="#999">165</text>
+                            <text x="292" y="148" text-anchor="middle" font-size="9" fill="#4caf50" font-weight="600">150</text>
+                            
+                            <!-- 滚动基线折线 (蓝色) -->
+                            <polyline points="99,190 179,185 259,180 339,175 419,170 499,165 579,160" 
+                                      fill="none" stroke="#4a90e2" stroke-width="3"/>
+                            
+                            <!-- 折线数据点 -->
+                            <circle cx="99" cy="190" r="4" fill="#4a90e2"/>
+                            <circle cx="179" cy="185" r="4" fill="#4a90e2"/>
+                            <circle cx="259" cy="180" r="4" fill="#4a90e2"/>
+                            <circle cx="339" cy="175" r="4" fill="#4a90e2" opacity="0.5"/>
+                            <circle cx="419" cy="170" r="4" fill="#4a90e2" opacity="0.5"/>
+                            <circle cx="499" cy="165" r="4" fill="#4a90e2" opacity="0.5"/>
+                            <circle cx="579" cy="160" r="4" fill="#4a90e2" opacity="0.5"/>
+                            
+                            <!-- Q1结束虚线 -->
+                            <line x1="305" y1="25" x2="305" y2="255" stroke="#8B0000" stroke-width="1.5" stroke-dasharray="5,5" opacity="0.4"/>
+                            <text x="315" y="45" font-size="11" fill="#8B0000" font-weight="600">← Q1结束</text>
+                            
+                            <!-- Q1表现良好提示框 -->
+                            <rect x="360" y="55" width="120" height="50" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="1.5"/>
+                            <text x="420" y="75" text-anchor="middle" font-size="12" fill="#2e7d32" font-weight="600">Q1表现优秀</text>
+                            <text x="420" y="93" text-anchor="middle" font-size="10" fill="#666">平均低于基线10%</text>
+                            
+                            <!-- X轴标签 -->
+                            <text x="116" y="262" text-anchor="middle" font-size="11" fill="#333" font-weight="500">1月</text>
+                            <text x="196" y="262" text-anchor="middle" font-size="11" fill="#333" font-weight="500">2月</text>
+                            <text x="276" y="262" text-anchor="middle" font-size="11" fill="#333" font-weight="500">3月</text>
+                            <text x="339" y="262" text-anchor="middle" font-size="11" fill="#999">4月</text>
+                            <text x="419" y="262" text-anchor="middle" font-size="11" fill="#999">5月</text>
+                            <text x="499" y="262" text-anchor="middle" font-size="11" fill="#999">6月</text>
+                            <text x="579" y="262" text-anchor="middle" font-size="11" fill="#999">7月</text>
+                        </svg>
+                        
+                        <div style="display:flex;gap:24px;margin-top:16px;justify-content:center;">
+                            <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666;">
+                                <div style="width:14px;height:14px;background:#e0e0e0;border-radius:3px;"></div>
+                                <span>月度基线</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666;">
+                                <div style="width:14px;height:14px;background:#4caf50;border-radius:3px;"></div>
+                                <span>实际消耗</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666;">
+                                <div style="width:16px;height:3px;background:#4a90e2;border-radius:2px;"></div>
+                                <span>滚动基线</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 新增视图：业务分组成本 & 各环节占比 -->
+            <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                <!-- 业务分组成本消耗 -->
+                <div class="panel-card">
+                    <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:12px;">各业务分组Q1成本消耗</div>
+                    <div style="display:flex;gap:16px;margin-bottom:12px;font-size:11px;color:#666;">
+                        <div style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:12px;background:#e0e0e0;border-radius:2px;"></div>指导基线</div>
+                        <div style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:12px;background:#8B0000;border-radius:2px;"></div>报价金额</div>
+                        <div style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:12px;background:#4caf50;border-radius:2px;"></div>结余</div>
+                    </div>
+                    <svg width="100%" height="380" viewBox="0 0 420 380" style="background:#fafafa;border-radius:8px;">
+                        <!-- Y轴 -->
+                        <line x1="55" y1="20" x2="55" y2="300" stroke="#e8e8e8" stroke-width="1"/>
+                        <line x1="55" y1="300" x2="400" y2="300" stroke="#e8e8e8" stroke-width="1"/>
+                        
+                        <!-- Y轴标签 -->
+                        <text x="45" y="28" text-anchor="end" font-size="9" fill="#999">130万</text>
+                        <text x="45" y="80" text-anchor="end" font-size="9" fill="#999">100万</text>
+                        <text x="45" y="132" text-anchor="end" font-size="9" fill="#999">75万</text>
+                        <text x="45" y="184" text-anchor="end" font-size="9" fill="#999">50万</text>
+                        <text x="45" y="236" text-anchor="end" font-size="9" fill="#999">25万</text>
+                        <text x="45" y="308" text-anchor="end" font-size="9" fill="#999">0</text>
+                        
+                        <!-- 水平网格线 -->
+                        <line x1="55" y1="28" x2="400" y2="28" stroke="#f0f0f0" stroke-width="1"/>
+                        <line x1="55" y1="80" x2="400" y2="80" stroke="#f0f0f0" stroke-width="1"/>
+                        <line x1="55" y1="132" x2="400" y2="132" stroke="#f0f0f0" stroke-width="1"/>
+                        <line x1="55" y1="184" x2="400" y2="184" stroke="#f0f0f0" stroke-width="1"/>
+                        <line x1="55" y1="236" x2="400" y2="236" stroke="#f0f0f0" stroke-width="1"/>
+                        
+                        <!-- 分组1: UGC研发 -->
+                        <rect x="60" y="58" width="18" height="242" fill="#e0e0e0" rx="2"/>
+                        <rect x="80" y="73" width="18" height="227" fill="#8B0000" rx="2"/>
+                        <rect x="80" y="58" width="18" height="15" fill="#4caf50" rx="2"/>
+                        <text x="79" y="52" text-anchor="middle" font-size="8" fill="#8B0000">110</text>
+                        <text x="79" y="325" text-anchor="middle" font-size="9" fill="#666">UGC研发</text>
+                        <text x="79" y="338" text-anchor="middle" font-size="8" fill="#999">19.6%</text>
+                        
+                        <!-- 分组2: UGC运营 -->
+                        <rect x="105" y="101" width="18" height="199" fill="#e0e0e0" rx="2"/>
+                        <rect x="125" y="122" width="18" height="178" fill="#b71c1c" rx="2"/>
+                        <rect x="125" y="101" width="18" height="21" fill="#4caf50" rx="2"/>
+                        <text x="124" y="95" text-anchor="middle" font-size="8" fill="#b71c1c">85</text>
+                        <text x="124" y="325" text-anchor="middle" font-size="9" fill="#666">UGC运营</text>
+                        <text x="124" y="338" text-anchor="middle" font-size="8" fill="#999">15.2%</text>
+                        
+                        <!-- 分组3: IP内容 -->
+                        <rect x="150" y="88" width="18" height="212" fill="#e0e0e0" rx="2"/>
+                        <rect x="170" y="109" width="18" height="191" fill="#c62828" rx="2"/>
+                        <rect x="170" y="88" width="18" height="21" fill="#4caf50" rx="2"/>
+                        <text x="169" y="82" text-anchor="middle" font-size="8" fill="#c62828">95</text>
+                        <text x="169" y="325" text-anchor="middle" font-size="9" fill="#666">IP内容</text>
+                        <text x="169" y="338" text-anchor="middle" font-size="8" fill="#999">17.0%</text>
+                        
+                        <!-- 分组4: 系统社交 -->
+                        <rect x="195" y="127" width="18" height="173" fill="#e0e0e0" rx="2"/>
+                        <rect x="215" y="149" width="18" height="151" fill="#d32f2f" rx="2"/>
+                        <rect x="215" y="127" width="18" height="22" fill="#4caf50" rx="2"/>
+                        <text x="214" y="121" text-anchor="middle" font-size="8" fill="#d32f2f">70</text>
+                        <text x="214" y="325" text-anchor="middle" font-size="9" fill="#666">系统社交</text>
+                        <text x="214" y="338" text-anchor="middle" font-size="8" fill="#999">12.5%</text>
+                        
+                        <!-- 分组5: 数值AI -->
+                        <rect x="240" y="150" width="18" height="150" fill="#e0e0e0" rx="2"/>
+                        <rect x="260" y="172" width="18" height="128" fill="#e53935" rx="2"/>
+                        <rect x="260" y="150" width="18" height="22" fill="#4caf50" rx="2"/>
+                        <text x="259" y="144" text-anchor="middle" font-size="8" fill="#e53935">55</text>
+                        <text x="259" y="325" text-anchor="middle" font-size="9" fill="#666">数值AI</text>
+                        <text x="259" y="338" text-anchor="middle" font-size="8" fill="#999">9.8%</text>
+                        
+                        <!-- 分组6: 赛事 -->
+                        <rect x="285" y="166" width="18" height="134" fill="#e0e0e0" rx="2"/>
+                        <rect x="305" y="190" width="18" height="110" fill="#ef5350" rx="2"/>
+                        <rect x="305" y="166" width="18" height="24" fill="#4caf50" rx="2"/>
+                        <text x="304" y="160" text-anchor="middle" font-size="8" fill="#ef5350">45</text>
+                        <text x="304" y="325" text-anchor="middle" font-size="9" fill="#666">赛事</text>
+                        <text x="304" y="338" text-anchor="middle" font-size="8" fill="#999">8.0%</text>
+                        
+                        <!-- 分组7: 海外 -->
+                        <rect x="330" y="141" width="18" height="159" fill="#e0e0e0" rx="2"/>
+                        <rect x="350" y="163" width="18" height="137" fill="#f44336" rx="2"/>
+                        <rect x="350" y="141" width="18" height="22" fill="#4caf50" rx="2"/>
+                        <text x="349" y="135" text-anchor="middle" font-size="8" fill="#f44336">60</text>
+                        <text x="349" y="325" text-anchor="middle" font-size="9" fill="#666">海外</text>
+                        <text x="349" y="338" text-anchor="middle" font-size="8" fill="#999">10.7%</text>
+                        
+                        <!-- 分组8: 创意中心 -->
+                        <rect x="375" y="175" width="18" height="125" fill="#e0e0e0" rx="2"/>
+                        <rect x="395" y="201" width="18" height="99" fill="#ef9a9a" rx="2"/>
+                        <rect x="395" y="175" width="18" height="26" fill="#4caf50" rx="2"/>
+                        <text x="394" y="169" text-anchor="middle" font-size="8" fill="#ef9a9a">40</text>
+                        <text x="394" y="325" text-anchor="middle" font-size="9" fill="#666">创意中心</text>
+                        <text x="394" y="338" text-anchor="middle" font-size="8" fill="#999">7.1%</text>
+                        
+                        <!-- 图例 -->
+                        <rect x="55" y="355" width="120" height="18" rx="4" fill="#fff" stroke="#e8e8e8"/>
+                        <text x="65" y="367" font-size="9" fill="#666">灰色=基线 红色=报价 绿色=结余</text>
+                    </svg>
+                    <div style="margin-top:12px;padding:12px;background:#f5f5f5;border-radius:8px;font-size:12px;color:#666;">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>总基线: <strong>590万</strong></span>
+                            <span>总报价: <strong style="color:#8B0000;">560万</strong></span>
+                            <span>总结余: <strong style="color:#4caf50;">30万</strong></span>
+                        </div>
+                        <div style="font-size:11px;color:#999;">最高消耗: UGC研发 110万 (19.6%) | 全部控制在基线内 ✓</div>
+                    </div>
+                </div>
+                
+                <!-- 各环节占比 - 环形图 -->
+                <div class="panel-card">
+                    <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">各环节成本占比</div>
+                    <div style="display:flex;align-items:center;justify-content:center;padding:20px;">
+                        <svg width="280" height="260" viewBox="0 0 280 260">
+                            <!-- 定义渐变 -->
+                            <defs>
+                                <linearGradient id="artGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#8B0000"/>
+                                    <stop offset="100%" style="stop-color:#b71c1c"/>
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- 完整的背景圆环 -->
+                            <circle cx="120" cy="120" r="75" fill="none" stroke="#f5f5f5" stroke-width="30"/>
+                            
+                            <!-- 美术 45% (162度) - 从顶部开始 -->
+                            <circle cx="120" cy="120" r="75" fill="none" stroke="url(#artGrad)" stroke-width="30"
+                                    stroke-dasharray="212 471" stroke-dashoffset="0" transform="rotate(-90, 120, 120)"/>
+                            
+                            <!-- 音频 15% (54度) -->
+                            <circle cx="120" cy="120" r="75" fill="none" stroke="#c62828" stroke-width="30"
+                                    stroke-dasharray="71 471" stroke-dashoffset="-212" transform="rotate(-90, 120, 120)"/>
+                            
+                            <!-- GUI 25% (90度) -->
+                            <circle cx="120" cy="120" r="75" fill="none" stroke="#e57373" stroke-width="30"
+                                    stroke-dasharray="118 471" stroke-dashoffset="-283" transform="rotate(-90, 120, 120)"/>
+                            
+                            <!-- 其他 15% (54度) -->
+                            <circle cx="120" cy="120" r="75" fill="none" stroke="#ffcdd2" stroke-width="30"
+                                    stroke-dasharray="71 471" stroke-dashoffset="-401" transform="rotate(-90, 120, 120)"/>
+                            
+                            <!-- 中心圆 -->
+                            <circle cx="120" cy="120" r="50" fill="#fff"/>
+                            <circle cx="120" cy="120" r="48" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+                            
+                            <!-- 中心文字 -->
+                            <text x="120" y="112" text-anchor="middle" font-size="13" fill="#666">总成本</text>
+                            <text x="120" y="135" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">560万</text>
+                            
+                            <!-- 图例 -->
+                            <rect x="195" y="50" width="80" height="140" rx="8" fill="#fafafa"/>
+                            <circle cx="208" cy="70" r="7" fill="#8B0000"/>
+                            <text x="220" y="74" font-size="12" fill="#333" font-weight="600">美术</text>
+                            <text x="265" y="74" text-anchor="end" font-size="11" fill="#666">45%</text>
+                            
+                            <circle cx="208" cy="100" r="7" fill="#c62828"/>
+                            <text x="220" y="104" font-size="12" fill="#333">音频</text>
+                            <text x="265" y="104" text-anchor="end" font-size="11" fill="#666">15%</text>
+                            
+                            <circle cx="208" cy="130" r="7" fill="#e57373"/>
+                            <text x="220" y="134" font-size="12" fill="#333">GUI</text>
+                            <text x="265" y="134" text-anchor="end" font-size="11" fill="#666">25%</text>
+                            
+                            <circle cx="208" cy="160" r="7" fill="#ffcdd2" stroke="#ddd" stroke-width="0.5"/>
+                            <text x="220" y="164" font-size="12" fill="#333">其他</text>
+                            <text x="265" y="164" text-anchor="end" font-size="11" fill="#666">15%</text>
+                            
+                            <!-- 细分标注线 -->
+                            <line x1="120" y1="45" x2="120" y2="35" stroke="#8B0000" stroke-width="2"/>
+                            <text x="120" y="30" text-anchor="middle" font-size="10" fill="#8B0000" font-weight="600">美术 252万</text>
+                        </svg>
+                    </div>
+                    <div style="margin-top:8px;padding:12px;background:#fff5f5;border-radius:8px;font-size:12px;color:#8B0000;text-align:center;border:1px solid #ffcdd2;">
+                        <strong>⚠️ 美术成本占比最高</strong><br/>
+                        <span style="font-size:11px;color:#666;">建议关注外包效率，评估AI美术提效空间</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 智能排期案例 -->
+        <section class="page" id="schedule-case">
+            <div class="case-header">
+                <div class="case-num">02</div>
+                <h2 class="case-title">资源管理——智能排期与资源调度优化</h2>
+            </div>
+            
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;">
+                <div class="panel-card" style="background:#fff;">
+                    <div class="feature-header" style="margin-bottom:16px;">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-title">自动化排期引擎</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>输入需求列表+人力池</li>
+                        <li>基于历史人天数据生成方案</li>
+                        <li>提供激进/保守多套选择</li>
+                        <li>AI辅助选择最优方案</li>
+                    </ul>
+                </div>
+                
+                <div class="panel-card" style="background:#fff;">
+                    <div class="feature-header" style="margin-bottom:16px;">
+                        <div class="feature-icon">👥</div>
+                        <div class="feature-title">人力负载可视化</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>实时人力负载热力图</li>
+                        <li>自动识别过载/闲置人员</li>
+                        <li>跨职能资源调配建议</li>
+                        <li>支持多版本资源对比</li>
+                    </ul>
+                </div>
+                
+                <div class="panel-card" style="background:#fff;">
+                    <div class="feature-header" style="margin-bottom:16px;">
+                        <div class="feature-icon">⚠️</div>
+                        <div class="feature-title">里程碑风险预警</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>自动标注里程碑检查点</li>
+                        <li>识别延期风险&gt;3天的模块</li>
+                        <li>关键节点到期前主动提醒</li>
+                        <li>风险趋势预测分析</li>
+                    </ul>
+                </div>
+                
+                <div class="panel-card" style="background:#fff;">
+                    <div class="feature-header" style="margin-bottom:16px;">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">动态资源调配</div>
+                    </div>
+                    <ul class="feature-list">
+                        <li>基于实时进度调整资源</li>
+                        <li>AI给出调配建议</li>
+                        <li>支持What-if模拟</li>
+                        <li>优化资源利用率</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="alert-box" style="margin-top:24px;">
+                <div class="alert-title">💡 典型场景</div>
+                <div class="alert-text">
+                    PM输入"下周12个需求，UI组人力紧张"，AI生成3套排期方案，并提示"建议将P2需求延后，否则UI组负载将达120%，建议协调美术组支援或拆分需求"
+                </div>
+            </div>
+            
+            <!-- 示意图部分 -->
+            <div style="margin-top:48px;padding-top:32px;border-top:2px dashed #e8e8e8;">
+                <h3 style="font-size:20px;font-weight:600;color:#8B0000;margin-bottom:24px;">📊 智能排期示意图</h3>
+                
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <!-- 左侧：人力负载热力图 -->
+                    <div class="panel-card">
+                        <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">下周人力负载热力图</div>
+                        <div style="overflow-x:auto;">
+                            <table style="width:100%;font-size:12px;border-collapse:collapse;">
+                                <thead>
+                                    <tr style="background:#f5f5f5;">
+                                        <th style="padding:10px 8px;text-align:left;font-weight:600;color:#666;border-bottom:2px solid #e8e8e8;">职能组</th>
+                                        <th style="padding:10px 4px;text-align:center;font-weight:600;color:#666;border-bottom:2px solid #e8e8e8;width:40px;">周一</th>
+                                        <th style="padding:10px 4px;text-align:center;font-weight:600;color:#666;border-bottom:2px solid #e8e8e8;width:40px;">周二</th>
+                                        <th style="padding:10px 4px;text-align:center;font-weight:600;color:#666;border-bottom:2px solid #e8e8e8;width:40px;">周三</th>
+                                        <th style="padding:10px 4px;text-align:center;font-weight:600;color:#666;border-bottom:2px solid #e8e8e8;width:40px;">周四</th>
+                                        <th style="padding:10px 4px;text-align:center;font-weight:600;color:#666;border-bottom:2px solid #e8e8e8;width:40px;">周五</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:8px;border-bottom:1px solid #f0f0f0;font-weight:500;">UI设计</td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">80%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">85%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#ff9800;border-radius:4px;color:#fff;font-weight:600;">100%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#f44336;border-radius:4px;color:#fff;font-weight:600;">120%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#ff9800;border-radius:4px;color:#fff;font-weight:600;">95%</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:8px;border-bottom:1px solid #f0f0f0;font-weight:500;">美术</td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">70%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">75%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">80%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">85%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">75%</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:8px;border-bottom:1px solid #f0f0f0;font-weight:500;">策划</td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#ff9800;border-radius:4px;color:#fff;font-weight:600;">90%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#ff9800;border-radius:4px;color:#fff;font-weight:600;">95%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">85%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">80%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">70%</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:8px;border-bottom:1px solid #f0f0f0;font-weight:500;">程序</td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">85%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">90%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#ff9800;border-radius:4px;color:#fff;font-weight:600;">95%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">88%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">82%</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:8px;border-bottom:1px solid #f0f0f0;font-weight:500;">测试</td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">60%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">65%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">70%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#4caf50;border-radius:4px;color:#fff;font-weight:600;">75%</div></td>
+                                        <td style="padding:4px;text-align:center;border-bottom:1px solid #f0f0f0;"><div style="padding:6px;background:#ff9800;border-radius:4px;color:#fff;font-weight:600;">90%</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top:12px;display:flex;gap:12px;justify-content:center;font-size:11px;">
+                            <div style="display:flex;align-items:center;gap:4px;"><div style="width:16px;height:16px;background:#4caf50;border-radius:3px;"></div><span>正常(&lt;90%)</span></div>
+                            <div style="display:flex;align-items:center;gap:4px;"><div style="width:16px;height:16px;background:#ff9800;border-radius:3px;"></div><span>饱和(90-100%)</span></div>
+                            <div style="display:flex;align-items:center;gap:4px;"><div style="width:16px;height:16px;background:#f44336;border-radius:3px;"></div><span>过载(&gt;100%)</span></div>
+                        </div>
+                        <div style="margin-top:12px;padding:12px;background:#fff5f5;border-radius:8px;font-size:12px;color:#8B0000;border:1px solid #ffcdd2;">
+                            <strong>⚠️ 风险预警：</strong>UI组周四负载达120%，建议将P2需求延后或协调美术组支援
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧：AI排期方案对比 -->
+                    <div class="panel-card">
+                        <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">AI生成的排期方案</div>
+                        <div style="display:flex;flex-direction:column;gap:12px;">
+                            <!-- 方案A：保守型 -->
+                            <div style="padding:14px;background:#f5f5f5;border-radius:10px;border:2px solid #e0e0e0;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                                    <span style="font-size:14px;font-weight:600;color:#333;">方案A：保守型</span>
+                                    <span style="padding:4px 10px;background:#4caf50;color:#fff;border-radius:12px;font-size:11px;">推荐</span>
+                                </div>
+                                <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                                    <span style="padding:4px 8px;background:#fff;border-radius:4px;font-size:11px;color:#666;">工期：10天</span>
+                                    <span style="padding:4px 8px;background:#fff;border-radius:4px;font-size:11px;color:#666;">风险：低</span>
+                                    <span style="padding:4px 8px;background:#fff;border-radius:4px;font-size:11px;color:#666;">负载：85%</span>
+                                </div>
+                                <div style="font-size:12px;color:#666;line-height:1.6;">
+                                    将P2需求延后至下周，UI组负载控制在85%以内，确保质量
+                                </div>
+                            </div>
+                            
+                            <!-- 方案B：平衡型 -->
+                            <div style="padding:14px;background:#fff;border-radius:10px;border:1px solid #e0e0e0;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                                    <span style="font-size:14px;font-weight:600;color:#333;">方案B：平衡型</span>
+                                    <span style="padding:4px 10px;background:#ff9800;color:#fff;border-radius:12px;font-size:11px;">可选</span>
+                                </div>
+                                <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                                    <span style="padding:4px 8px;background:#f5f5f5;border-radius:4px;font-size:11px;color:#666;">工期：8天</span>
+                                    <span style="padding:4px 8px;background:#f5f5f5;border-radius:4px;font-size:11px;color:#666;">风险：中</span>
+                                    <span style="padding:4px 8px;background:#f5f5f5;border-radius:4px;font-size:11px;color:#666;">负载：95%</span>
+                                </div>
+                                <div style="font-size:12px;color:#666;line-height:1.6;">
+                                    协调美术组支援UI组2人，保持原计划完成，需关注质量
+                                </div>
+                            </div>
+                            
+                            <!-- 方案C：激进型 -->
+                            <div style="padding:14px;background:#fff;border-radius:10px;border:1px solid #e0e0e0;opacity:0.7;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                                    <span style="font-size:14px;font-weight:600;color:#333;">方案C：激进型</span>
+                                    <span style="padding:4px 10px;background:#f44336;color:#fff;border-radius:12px;font-size:11px;">不推荐</span>
+                                </div>
+                                <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                                    <span style="padding:4px 8px;background:#f5f5f5;border-radius:4px;font-size:11px;color:#666;">工期：7天</span>
+                                    <span style="padding:4px 8px;background:#f5f5f5;border-radius:4px;font-size:11px;color:#666;">风险：高</span>
+                                    <span style="padding:4px 8px;background:#f5f5f5;border-radius:4px;font-size:11px;color:#666;">负载：115%</span>
+                                </div>
+                                <div style="font-size:12px;color:#666;line-height:1.6;">
+                                    按原计划执行，UI组加班赶工，延期风险较高
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top:12px;padding:12px;background:#e8f5e9;border-radius:8px;font-size:12px;color:#2e7d32;">
+                            <strong>✓ AI建议：</strong>选择方案A，风险最低，团队可持续性最好
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 甘特图示意 -->
+                <div style="margin-top:24px;" class="panel-card">
+                    <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;">推荐方案甘特图（方案A：保守型）</div>
+                    <div style="overflow-x:auto;">
+                        <svg width="100%" height="200" viewBox="0 0 700 200" style="min-width:600px;">
+                            <!-- 表头 -->
+                            <rect x="0" y="0" width="700" height="36" fill="#f5f5f5"/>
+                            <text x="80" y="24" text-anchor="middle" font-size="12" font-weight="600" fill="#333">需求</text>
+                            <text x="180" y="24" text-anchor="middle" font-size="12" font-weight="600" fill="#333">负责人</text>
+                            <text x="280" y="24" text-anchor="middle" font-size="12" font-weight="600" fill="#333">优先级</text>
+                            <text x="380" y="24" text-anchor="middle" font-size="12" font-weight="600" fill="#333">周一</text>
+                            <text x="460" y="24" text-anchor="middle" font-size="12" font-weight="600" fill="#333">周二</text>
+                            <text x="540" y="24" text-anchor="middle" font-size="12" font-weight="600" fill="#333">周三</text>
+                            <text x="620" y="24" text-anchor="middle" font-size="12" font-weight="600" fill="#333">周四</text>
+                            
+                            <!-- 任务1 -->
+                            <rect x="0" y="40" width="700" height="36" fill="#fff"/>
+                            <text x="10" y="62" font-size="11" fill="#333">登录界面优化</text>
+                            <text x="180" y="62" text-anchor="middle" font-size="11" fill="#666">张三</text>
+                            <text x="280" y="62" text-anchor="middle" font-size="11" fill="#f44336" font-weight="600">P0</text>
+                            <rect x="380" y="48" width="156" height="20" fill="#8B0000" rx="4"/>
+                            <text x="458" y="62" text-anchor="middle" font-size="10" fill="#fff">2天</text>
+                            
+                            <!-- 任务2 -->
+                            <rect x="0" y="76" width="700" height="36" fill="#fafafa"/>
+                            <text x="10" y="98" font-size="11" fill="#333">个人中心改版</text>
+                            <text x="180" y="98" text-anchor="middle" font-size="11" fill="#666">李四</text>
+                            <text x="280" y="98" text-anchor="middle" font-size="11" fill="#f44336" font-weight="600">P0</text>
+                            <rect x="380" y="84" width="234" height="20" fill="#b71c1c" rx="4"/>
+                            <text x="497" y="98" text-anchor="middle" font-size="10" fill="#fff">3天</text>
+                            
+                            <!-- 任务3 -->
+                            <rect x="0" y="112" width="700" height="36" fill="#fff"/>
+                            <text x="10" y="134" font-size="11" fill="#333">消息通知优化</text>
+                            <text x="180" y="134" text-anchor="middle" font-size="11" fill="#666">王五</text>
+                            <text x="280" y="134" text-anchor="middle" font-size="11" fill="#ff9800" font-weight="600">P1</text>
+                            <rect x="540" y="120" width="156" height="20" fill="#c62828" rx="4"/>
+                            <text x="618" y="134" text-anchor="middle" font-size="10" fill="#fff">2天</text>
+                            
+                            <!-- 任务4 - P2延后 -->
+                            <rect x="0" y="148" width="700" height="36" fill="#fff5f5"/>
+                            <text x="10" y="170" font-size="11" fill="#999">好友系统（延后）</text>
+                            <text x="180" y="170" text-anchor="middle" font-size="11" fill="#999">赵六</text>
+                            <text x="280" y="170" text-anchor="middle" font-size="11" fill="#999">P2</text>
+                            <text x="497" y="170" text-anchor="middle" font-size="11" fill="#999">→ 下周排期</text>
+                            
+                            <!-- 网格线 -->
+                            <line x1="340" y1="36" x2="340" y2="184" stroke="#e8e8e8" stroke-width="1"/>
+                            <line x1="420" y1="36" x2="420" y2="184" stroke="#e8e8e8" stroke-width="1"/>
+                            <line x1="500" y1="36" x2="500" y2="184" stroke="#e8e8e8" stroke-width="1"/>
+                            <line x1="580" y1="36" x2="580" y2="184" stroke="#e8e8e8" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <div style="margin-top:12px;display:flex;gap:16px;justify-content:center;font-size:11px;color:#666;">
+                        <div style="display:flex;align-items:center;gap:4px;"><div style="width:14px;height:14px;background:#8B0000;border-radius:3px;"></div><span>P0需求</span></div>
+                        <div style="display:flex;align-items:center;gap:4px;"><div style="width:14px;height:14px;background:#c62828;border-radius:3px;"></div><span>P1需求</span></div>
+                        <div style="display:flex;align-items:center;gap:4px;"><div style="width:14px;height:14px;background:#ffcdd2;border-radius:3px;"></div><span>P2延后</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 决策中枢案例 -->
+        <section class="page" id="bot-case">
+            <div class="case-header">
+                <div class="case-num">06</div>
+                <h2 class="case-title">决策中枢——项目管理智能Bot</h2>
+            </div>
+            
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+                <div>
+                    <div class="panel-card" style="background:#fff;margin-bottom:20px;">
+                        <div style="font-size:16px;font-weight:600;color:#333;margin-bottom:16px;">核心能力</div>
+                        <div style="display:flex;flex-direction:column;gap:12px;">
+                            <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fafafa;border-radius:8px;">
+                                <span style="font-size:20px;">💬</span>
+                                <span style="font-size:14px;color:#555;">自然语言交互</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fafafa;border-radius:8px;">
+                                <span style="font-size:20px;">🔍</span>
+                                <span style="font-size:14px;color:#555;">进度查询</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fafafa;border-radius:8px;">
+                                <span style="font-size:20px;">⚠️</span>
+                                <span style="font-size:14px;color:#555;">风险预警</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fafafa;border-radius:8px;">
+                                <span style="font-size:20px;">📋</span>
+                                <span style="font-size:14px;color:#555;">流程问答</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-card" style="background:#fff;">
+                        <div style="font-size:16px;font-weight:600;color:#333;margin-bottom:16px;">整合能力</div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+                            <div style="text-align:center;padding:12px;background:#fafafa;border-radius:8px;">
+                                <div style="font-size:20px;margin-bottom:4px;">📊</div>
+                                <div style="font-size:12px;color:#666;">洞察</div>
+                            </div>
+                            <div style="text-align:center;padding:12px;background:#fafafa;border-radius:8px;">
+                                <div style="font-size:20px;margin-bottom:4px;">📅</div>
+                                <div style="font-size:12px;color:#666;">排期</div>
+                            </div>
+                            <div style="text-align:center;padding:12px;background:#fafafa;border-radius:8px;">
+                                <div style="font-size:20px;margin-bottom:4px;">💰</div>
+                                <div style="font-size:12px;color:#666;">成本</div>
+                            </div>
+                            <div style="text-align:center;padding:12px;background:#fafafa;border-radius:8px;">
+                                <div style="font-size:20px;margin-bottom:4px;">🔄</div>
+                                <div style="font-size:12px;color:#666;">管线</div>
+                            </div>
+                            <div style="text-align:center;padding:12px;background:#fafafa;border-radius:8px;">
+                                <div style="font-size:20px;margin-bottom:4px;">🛠️</div>
+                                <div style="font-size:12px;color:#666;">协同</div>
+                            </div>
+                            <div style="text-align:center;padding:12px;background:#fafafa;border-radius:8px;">
+                                <div style="font-size:20px;margin-bottom:4px;">🤖</div>
+                                <div style="font-size:12px;color:#666;">Bot</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-card" style="background:#fff;">
+                    <div style="font-size:16px;font-weight:600;color:#333;margin-bottom:16px;">交互示例</div>
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="align-self:flex-start;max-width:80%;padding:12px 16px;background:#f0f0f0;border-radius:12px 12px 12px 4px;font-size:14px;color:#333;">
+                                👤 "下周版本进度如何？"
+                            </div>
+                            <div style="align-self:flex-end;max-width:80%;padding:12px 16px;background:#8B0000;border-radius:12px 12px 4px 12px;font-size:14px;color:#fff;">
+                                🤖 "下周版本共12个需求，3个已完成，2个有风险（UI组负载110%），建议将P2需求延后"
+                            </div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="align-self:flex-start;max-width:80%;padding:12px 16px;background:#f0f0f0;border-radius:12px 12px 12px 4px;font-size:14px;color:#333;">
+                                👤 "帮我排一个登录界面优化，优先级P1"
+                            </div>
+                            <div style="align-self:flex-end;max-width:80%;padding:12px 16px;background:#8B0000;border-radius:12px 12px 4px 12px;font-size:14px;color:#fff;">
+                                🤖 "已生成排期建议：分配给UI-B组，预计3天，建议下周二开始。确认创建？"
+                            </div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="align-self:flex-start;max-width:80%;padding:12px 16px;background:#f0f0f0;border-radius:12px 12px 12px 4px;font-size:14px;color:#333;">
+                                👤 "Q2美术成本还剩多少？"
+                            </div>
+                            <div style="align-self:flex-end;max-width:80%;padding:12px 16px;background:#8B0000;border-radius:12px 12px 4px 12px;font-size:14px;color:#fff;">
+                                🤖 "Q2预算已使用75%（600万/800万），⚠️ 按当前节奏预计超支15%，建议优化P3需求"
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 对话输入框 -->
+                    <div style="margin-top:20px;padding:12px;background:#fafafa;border-radius:10px;border:1px solid #e8e8e8;">
+                        <div style="font-size:12px;color:#999;margin-bottom:8px;">💡 试试输入：</div>
+                        <div style="display:flex;gap:8px;">
+                            <input type="text" placeholder="输入指令，如：查询下周版本进度" 
+                                   style="flex:1;padding:10px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px;outline:none;"/>
+                            <button style="padding:10px 20px;background:#8B0000;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;">
+                                发送
+                            </button>
+                        </div>
+                        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+                            <span style="padding:4px 10px;background:#fff;border:1px solid #e8e8e8;border-radius:12px;font-size:11px;color:#666;cursor:pointer;">📊 成本查询</span>
+                            <span style="padding:4px 10px;background:#fff;border:1px solid #e8e8e8;border-radius:12px;font-size:11px;color:#666;cursor:pointer;">📅 排期建议</span>
+                            <span style="padding:4px 10px;background:#fff;border:1px solid #e8e8e8;border-radius:12px;font-size:11px;color:#666;cursor:pointer;">⚠️ 风险预警</span>
+                            <span style="padding:4px 10px;background:#fff;border:1px solid #e8e8e8;border-radius:12px;font-size:11px;color:#666;cursor:pointer;">👥 人力负载</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Tab切换功能
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                
+                // 添加active
+                this.classList.add('active');
+                const pageId = this.getAttribute('data-page');
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+        
+        // 页面内跳转
+        function showPage(pageId) {
+            document.querySelectorAll('.nav-tab').forEach(t => {
+                t.classList.remove('active');
+                if(t.getAttribute('data-page') === pageId) {
+                    t.classList.add('active');
+                }
+            });
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
